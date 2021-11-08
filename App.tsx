@@ -8,7 +8,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/archivo';
 import { Home } from './src/home';
-import theme from './src/theme';
+import theme from './src/global/theme';
 
 export default function App(): JSX.Element {
   const [isLoading] = useFonts({
