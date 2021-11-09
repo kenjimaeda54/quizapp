@@ -17,6 +17,7 @@ export const Container = styled.View`
   height: ${Dimensions.get('window').height}px;
   flex-direction: column;
   padding: ${getStatusBarHeight() + 20}px 20px ${getBottomSpace() + 20}px;
+  justify-content: space-between;
 `;
 
 export const Title = styled.Text`
@@ -37,18 +38,11 @@ export const Subtitle = styled.Text`
 
 export const ContainerQuantity = styled.View`
   width: 100%;
-  height: 70%;
+  padding: 20px 10px;
+  background-color: ${({ theme }) => theme.colors.success};
   justify-content: center;
   align-items: center;
-`;
-
-export const CardQuantity = styled.View`
-  background-color: ${({ theme }) => theme.colors.text};
-  width: 60%;
-  padding: 20px 10px;
   border-radius: 4px;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 export const TitleQuantity = styled.Text`
@@ -63,12 +57,12 @@ export const ContainerButton = styled.View`
   margin-top: 20px;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   border-radius: 5px;
 `;
 
 export const TextButton = styled.Text`
-  margin-top: 20px;
   font-family: ${({ theme }) => theme.fonts.archivo_600};
   font-size: ${RFValue(20)}px;
   line-height: ${RFValue(25)}px;
@@ -77,8 +71,6 @@ export const TextButton = styled.Text`
 
 export const ContainerMins = styled(RectButton)`
   width: 45%;
-  height: 100%;
-  background-color: ${({ theme }) => theme.colors.main};
   padding: 5px 0px;
   align-items: center;
   border-radius: 4px;
@@ -86,8 +78,6 @@ export const ContainerMins = styled(RectButton)`
 
 export const ContainerPlus = styled(RectButton)`
   width: 45%;
-  height: 100%;
-  background-color: ${({ theme }) => theme.colors.main};
   padding: 5px 0px;
   align-items: center;
   border-radius: 4px;
@@ -97,10 +87,10 @@ export const ButtonSubmit = styled(BorderlessButton)<ButtonSubmitProps>`
   margin-top: 10px;
   width: 100%;
   background-color: ${({ haveQuantity, theme }) =>
-    haveQuantity ? theme.colors.main : theme.colors.shape};
+    haveQuantity ? theme.colors.success : theme.colors.shape};
   border-radius: 4px;
   align-items: center;
-  padding: 5px 0px;
+  padding: 10px 0px;
 `;
 
 export const TextSubmit = styled.Text`

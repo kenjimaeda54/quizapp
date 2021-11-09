@@ -7,8 +7,9 @@ import {
   Archivo_600SemiBold,
   useFonts,
 } from '@expo-google-fonts/archivo';
-import { Home } from './src/home';
-import theme from './src/global/theme';
+import theme from './src/components/global/theme';
+import { Phrases } from './src/screens/phrases';
+import { Home } from './src/screens/home';
 
 export default function App(): JSX.Element {
   const [isLoading] = useFonts({
@@ -23,7 +24,7 @@ export default function App(): JSX.Element {
 
   return (
     <ThemeProvider theme={theme}>
-      <Home />
+      <Phrases />
     </ThemeProvider>
   );
 }
