@@ -7,10 +7,6 @@ import {
 import { RFValue } from 'react-native-responsive-fontsize';
 import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
 
-interface ButtonSubmitProps {
-  haveQuantity: boolean;
-}
-
 export const Container = styled.View`
   flex: 1;
   width: ${Dimensions.get('window').width}px;
@@ -81,21 +77,4 @@ export const ContainerPlus = styled(RectButton)`
   padding: 5px 0px;
   align-items: center;
   border-radius: 4px;
-`;
-
-export const ButtonSubmit = styled(BorderlessButton)<ButtonSubmitProps>`
-  margin-top: 10px;
-  width: 100%;
-  background-color: ${({ haveQuantity, theme }) =>
-    haveQuantity ? theme.colors.success : theme.colors.shape};
-  border-radius: 4px;
-  align-items: center;
-  padding: 10px 0px;
-`;
-
-export const TextSubmit = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.archivo_500};
-  color: ${({ theme }) => theme.colors.white};
-  font-size: ${RFValue(20)}px;
-  line-height: ${RFValue(25)}px;
 `;

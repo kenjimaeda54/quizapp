@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { Entypo } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../routes/app.routes';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useTheme } from 'styled-components';
+import { View } from 'react-native';
+import { useCustomHook } from '../../hooks/customHook';
 import {
   Container,
   Title,
@@ -10,14 +16,14 @@ import {
   TextButton,
   ContainerMins,
   ContainerPlus,
-  ButtonSubmit,
-  TextSubmit,
 } from './styles';
-import { useTheme } from 'styled-components';
-import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
-import { View } from 'react-native';
+import Button from '../../components/button_submit';
+
+type RoutesScreens = StackNavigationProp<RootStackParamList, 'home'>;
 
 export function Home() {
+  const { setQuantityHook } = useCustomHook();
+  const { navigate } = useNavigation<RoutesScreens>();
   const [quantity, setQuantity] = useState(0);
   const { colors } = useTheme();
 
@@ -28,6 +34,11 @@ export function Home() {
     if (type === 'minus' && quantity > 0) {
       return setQuantity((previous) => previous - 1);
     }
+  }
+
+  function handleNavigation() {
+    navigate('phrases');
+    setQuantityHook(quantity);
   }
 
   return (
@@ -53,13 +64,11 @@ export function Home() {
           </ContainerPlus>
         </ContainerButton>
       </ContainerQuantity>
-      <ButtonSubmit
-        onPress={() => console.log('oi')}
-        enabled={quantity > 0}
-        haveQuantity={quantity > 0}
-      >
-        <TextSubmit>Enviar </TextSubmit>
-      </ButtonSubmit>
+      <Button
+        haveQuantity={quantity > 1}
+        title="Enviar"
+        onPress={handleNavigation}
+      />
     </Container>
   );
 }

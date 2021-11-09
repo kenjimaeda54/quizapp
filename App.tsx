@@ -1,6 +1,8 @@
 import React from 'react';
 import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components';
+import { ContextProvider } from './src/hooks';
+import { Route } from './src/routes';
 import {
   Archivo_500Medium,
   Archivo_400Regular,
@@ -8,8 +10,6 @@ import {
   useFonts,
 } from '@expo-google-fonts/archivo';
 import theme from './src/components/global/theme';
-import { Phrases } from './src/screens/phrases';
-import { Home } from './src/screens/home';
 
 export default function App(): JSX.Element {
   const [isLoading] = useFonts({
@@ -24,7 +24,9 @@ export default function App(): JSX.Element {
 
   return (
     <ThemeProvider theme={theme}>
-      <Phrases />
+      <ContextProvider>
+        <Route />
+      </ContextProvider>
     </ThemeProvider>
   );
 }
