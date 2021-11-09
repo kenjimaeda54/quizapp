@@ -1,8 +1,5 @@
 export interface Phrase {
-  id: number;
-  category: string;
-  type: string;
-  difficulty: string;
+  id: string;
   question: string;
   correct_answer: string;
   incorrect_answers: string[];

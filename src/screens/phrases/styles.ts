@@ -37,13 +37,18 @@ export const Subtitle = styled.Text`
   margin-bottom: 30px;
 `;
 
-export const Section = styled.View``;
-
 export const TitleSection = styled.Text`
   font-family: ${({ theme }) => theme.fonts.archivo_400};
-  font-size: ${RFValue(17)}px;
-  line-height: ${RFValue(20)}px;
+  font-size: ${RFValue(13)}px;
+  line-height: ${RFValue(17)}px;
   color: ${({ theme }) => theme.colors.success};
+`;
+
+export const ColorQuantity = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.archivo_600};
+  font-size: ${RFValue(20)}px;
+  line-height: ${RFValue(23)}px;
+  color: ${({ theme }) => theme.colors.main};
 `;
 
 export const ContainerButton = styled.View`
@@ -77,4 +82,11 @@ export const TextButtonConfirm = styled.Text`
 
 export const TextButtonCancel = styled(TextButtonConfirm)`
   color: ${({ theme }) => theme.colors.main};
+`;
+
+export const ContainerLoading = styled.View`
+  width: 100%;
+  height: 100%;
+
+  align-items: center;
 `;

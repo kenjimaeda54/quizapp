@@ -1,36 +1,35 @@
 import React, { useState, Fragment, useRef, useEffect } from 'react';
-import {
-  Pressable,
-  PressableProps,
-  ScrollView,
-  StatusBar,
-  View,
-} from 'react-native';
+import uuid from 'react-native-uuid';
+import { Pressable, ActivityIndicator, StatusBar, View } from 'react-native';
 import { ListPhases } from '../../components/list_phrases';
 import { Modalize } from 'react-native-modalize';
-import Modal from '../../components/modal_report';
 import { AntDesign } from '@expo/vector-icons';
 import {
   Container,
   ListContainer,
   Title,
   Subtitle,
-  Section,
   TitleSection,
+  ColorQuantity,
   ContainerButton,
   ButtonConfirm,
   ButtonCancel,
   TextButtonConfirm,
   TextButtonCancel,
+  ContainerLoading,
 } from './styles';
-import { Phrase, results } from '../../util/dto';
-import { FlatList } from 'react-native';
+import { Phrase } from '../../util/dto';
 import Button from '../../components/button_submit';
 import { useCustomHook } from '../../hooks/customHook';
 import { useTheme } from 'styled-components';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { useNavigation } from '@react-navigation/native';
+import { api } from '../../services';
+import { Separator } from '../../components/separation/styles';
 
+interface DataProps {
+  results: Phrase[];
+  response: number;
+}
 export function Phrases() {
   const { goBack } = useNavigation();
   const { quantity } = useCustomHook();
@@ -38,11 +37,77 @@ export function Phrases() {
   const openModalRef = useRef<Modalize>(null);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
-  const [arrayPhrase, setArrayPhrase] = useState<Phrase[]>([]);
+  const [allPhrase, setAllPhrase] = useState<Phrase[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  function handleConfirm() {
-    setIsCorrect((old) => !old);
-    setArrayPhrase(results);
+  async function handleConfirm() {
+    try {
+      setLoading(true);
+      setIsCorrect(true);
+      const response = await api.get(
+        `api.php?amount=${quantity}&type=multiple`,
+      );
+      const datas: DataProps = response.data;
+      setAllPhrase(
+        datas.results.map((item: Phrase, index) => {
+          if (index === 0) {
+            const phraseOne = item.incorrect_answers[0];
+            const phraseTwo = item.correct_answer;
+            const phraseThree = item.incorrect_answers[2];
+            const phraseFour = item.incorrect_answers[1];
+            return {
+              id: `${uuid.v4()}`,
+              question: item.question,
+              correct_answer: item.correct_answer,
+              incorrect_answers: [
+                phraseOne,
+                phraseTwo,
+                phraseThree,
+                phraseFour,
+              ],
+            };
+          }
+          if (index % 2 === 0) {
+            const phraseOne = item.incorrect_answers[0];
+            const phraseTwo = item.incorrect_answers[2];
+            const phraseThree = item.correct_answer;
+            const phraseFour = item.incorrect_answers[1];
+            return {
+              id: `${uuid.v4()}`,
+              question: item.question,
+              correct_answer: item.correct_answer,
+              incorrect_answers: [
+                phraseOne,
+                phraseTwo,
+                phraseThree,
+                phraseFour,
+              ],
+            };
+          }
+          if (index % 2 !== 0) {
+            const phraseOne = item.incorrect_answers[0];
+            const phraseTwo = item.incorrect_answers[2];
+            const phraseThree = item.incorrect_answers[1];
+            const phraseFour = item.correct_answer;
+            return {
+              id: `${uuid.v4()}`,
+              question: item.question,
+              correct_answer: item.correct_answer,
+              incorrect_answers: [
+                phraseOne,
+                phraseTwo,
+                phraseThree,
+                phraseFour,
+              ],
+            };
+          }
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const handleOpacity = () => setIsTouch(true);
@@ -56,7 +121,7 @@ export function Phrases() {
   return (
     <Fragment>
       <ListContainer
-        data={arrayPhrase}
+        data={allPhrase}
         keyExtractor={(item) => String(item.id)}
         ListHeaderComponent={
           <Fragment>
@@ -80,11 +145,12 @@ export function Phrases() {
                   cancel
                 </Subtitle>
               </View>
-              <Section>
+              <View>
                 <TitleSection>
-                  Quantidade de perguntas escolhidas: {quantity}
+                  Quantidade de perguntas escolhidas:{' '}
+                  <ColorQuantity> {quantity}</ColorQuantity>
                 </TitleSection>
-              </Section>
+              </View>
             </Container>
           </Fragment>
         }
@@ -95,22 +161,40 @@ export function Phrases() {
         ListHeaderComponentStyle={{
           marginBottom: 20,
         }}
+        contentContainerStyle={{
+          paddingBottom: 50,
+        }}
+        ItemSeparatorComponent={() => (
+          <Separator
+            style={{
+              marginVertical: 20,
+            }}
+          />
+        )}
       />
       <ContainerButton>
-        {isCorrect ? (
-          <Button
-            onPress={handleReport}
-            haveQuantity={arrayPhrase.length > 0}
-            title="relatorio"
-          />
+        {loading ? (
+          <ContainerLoading>
+            <ActivityIndicator size="large" color={colors.main} />
+          </ContainerLoading>
         ) : (
           <Fragment>
-            <ButtonConfirm onPress={handleConfirm} activeOpacity={0.5}>
-              <TextButtonConfirm>Start</TextButtonConfirm>
-            </ButtonConfirm>
-            <ButtonCancel activeOpacity={0.5}>
-              <TextButtonCancel>Cancel</TextButtonCancel>
-            </ButtonCancel>
+            {isCorrect ? (
+              <Button
+                onPress={handleReport}
+                haveQuantity={allPhrase.length > 0}
+                title="relatorio"
+              />
+            ) : (
+              <Fragment>
+                <ButtonConfirm onPress={handleConfirm} activeOpacity={0.5}>
+                  <TextButtonConfirm>Start</TextButtonConfirm>
+                </ButtonConfirm>
+                <ButtonCancel activeOpacity={0.5}>
+                  <TextButtonCancel>Cancel</TextButtonCancel>
+                </ButtonCancel>
+              </Fragment>
+            )}
           </Fragment>
         )}
       </ContainerButton>

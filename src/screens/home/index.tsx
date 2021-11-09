@@ -65,7 +65,7 @@ export function Home() {
         </ContainerButton>
       </ContainerQuantity>
       <Button
-        haveQuantity={quantity > 1}
+        haveQuantity={quantity > 0}
         title="Enviar"
         onPress={handleNavigation}
       />
