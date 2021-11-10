@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  Fragment,
-  useCallback,
-} from 'react';
+import React, { useState, useRef, Fragment, useCallback } from 'react';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import { RectButton } from 'react-native-gesture-handler';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';

@@ -2,13 +2,7 @@ import React, { useState, Fragment, useRef, useEffect } from 'react';
 import uuid from 'react-native-uuid';
 import Modal from '../../components/modal_report';
 import { Button } from '../../components/button_submit';
-import {
-  Pressable,
-  ActivityIndicator,
-  StatusBar,
-  View,
-  FlatList,
-} from 'react-native';
+import { Pressable, ActivityIndicator, StatusBar, View } from 'react-native';
 import { ListPhases } from '../../components/list_phrases';
 import { Modalize } from 'react-native-modalize';
 import { AntDesign } from '@expo/vector-icons';
@@ -122,6 +116,8 @@ export function Phrases() {
     }
   }
 
+  const handleCancel = () => goBack();
+
   function handlePressPhrase() {
     setPhrases(true);
   }
@@ -228,7 +224,7 @@ export function Phrases() {
                   <ButtonConfirm onPress={handleConfirm} activeOpacity={0.5}>
                     <TextButtonConfirm>Start</TextButtonConfirm>
                   </ButtonConfirm>
-                  <ButtonCancel activeOpacity={0.5}>
+                  <ButtonCancel onPress={handleCancel} activeOpacity={0.5}>
                     <TextButtonCancel>Cancel</TextButtonCancel>
                   </ButtonCancel>
                 </Fragment>
