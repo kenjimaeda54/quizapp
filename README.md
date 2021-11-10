@@ -277,7 +277,7 @@ export const ListContainer = styled(FlatList as new () => FlatList)`
  - [axios](https://axios-http.com/docs/intro) para lidar com requisições http e https.
  - [styled-components](https://styled-components.com/) ótima lib para lidar com estilos.
  - [gesture-handler](https://docs.swmansion.com/react-native-gesture-handler/docs/) lidar com os comportamentos nativos do sistema operacional
- - [react-navigation] (https://reactnavigation.org/) lidar com a navegação no app
+ - [react-navigation](https://reactnavigation.org/) lidar com a navegação no app
 
 
 
