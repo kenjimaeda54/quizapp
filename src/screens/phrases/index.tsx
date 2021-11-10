@@ -231,7 +231,12 @@ export function Phrases() {
           )}
         </ContainerButton>
       </Fragment>
-      <Modal ref={openModalRef} data={reportUser} total={totalAnswers} />
+      <Modal
+        haveBack={true}
+        ref={openModalRef}
+        data={reportUser}
+        total={totalAnswers}
+      />
     </Fragment>
   );
 }

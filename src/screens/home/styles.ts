@@ -32,6 +32,24 @@ export const Subtitle = styled.Text`
   margin-bottom: 30px;
 `;
 
+export const ContainerReport = styled.View`
+  border-radius: 4px;
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.colors.success};
+  justify-content: space-around;
+  align-items: center;
+  padding: 15px 4px;
+  width: 100%;
+  flex-direction: row;
+`;
+
+export const TextReport = styled.Text`
+  font-family: ${({ theme }) => theme.fonts.archivo_500};
+  font-size: ${RFValue(17)}px;
+  line-height: ${RFValue(20)}px;
+  color: ${({ theme }) => theme.colors.main};
+`;
+
 export const ContainerQuantity = styled.View`
   width: 100%;
   padding: 20px 10px;

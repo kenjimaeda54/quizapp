@@ -30,11 +30,13 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
   const [isTouched, setIsTouched] = useState(0);
   const [phraseSelect, setPhraseSelect] = useState('');
   const [enableTouch, setEnableTouch] = useState(true);
+  const [activeOPacity, setActiveOpacity] = useState(false);
 
   function handleReport(phraseSelect, report, reportSelect) {
     setIsTouched(reportSelect);
     setPhraseSelect(phraseSelect);
     setEnableTouch(false);
+    setActiveOpacity(true);
     if (report === data.correct_answer) {
       totalAnswersRef.current += 1;
       return setIsCorrect(true);
@@ -45,6 +47,7 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
 
   async function handleAsyncStorage(report) {
     try {
+      setActiveOpacity((old) => !old);
       //setando as frases escolhidas
       const phrases = {
         id: uuid.v4(),
@@ -71,18 +74,20 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
         totalQuestions: total,
       };
       const fetchAllAnswers = await AsyncStorage.getItem(KeyTotalAnswers);
-      const allAnswers = fetchAllAnswers ? JSON.parse(fetchAllAnswers) : [];
-      if (allAnswers.length > 0) {
-        const newTotalAnswers = allAnswers.map((item) => {
-          return {
-            id: item.id,
-            answerTotalCorrect:
-              item.answerTotalCorrect + totalAnswersRef.current,
-            answerTotalWrong: item.answerTotalWrong + totalWrongRef.current,
-            totalQuestions: item.totalQuestions + total,
-          };
-        });
-        AsyncStorage.setItem(KeyTotalAnswers, JSON.stringify(newTotalAnswers));
+      const allAnswers = fetchAllAnswers ? JSON.parse(fetchAllAnswers) : {};
+      console.log(allAnswers);
+      if (Object.keys(allAnswers).length > 0) {
+        const updateTotalAnswers = {
+          id: allAnswers.id,
+          answerTotalCorrect:
+            allAnswers.answerTotalCorrect + totalAnswersRef.current,
+          answerTotalWrong: allAnswers.answerTotalWrong + totalWrongRef.current,
+          totalQuestions: allAnswers.totalQuestions + total,
+        };
+        AsyncStorage.setItem(
+          KeyTotalAnswers,
+          JSON.stringify(updateTotalAnswers),
+        );
       } else {
         AsyncStorage.setItem(KeyTotalAnswers, JSON.stringify(newAnswers));
       }
@@ -105,12 +110,14 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
             disabled={enableTouch && phraseSelect === data.id ? true : false}
             onPress={() => handleReport(data.id, data.incorrect_answers[0], 1)}
             {...props}
+            hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
           >
             <Select
               tintColorCorrect={
                 !enableTouch &&
                 data.incorrect_answers[0] === data.correct_answer
               }
+              changeOpacity={activeOPacity}
             />
           </Pressable>
           <Option>{data.incorrect_answers[0]}</Option>
@@ -127,12 +134,14 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
             disabled={enableTouch && phraseSelect === data.id ? true : false}
             {...props}
             onPress={() => handleReport(data.id, data.incorrect_answers[1], 2)}
+            hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
           >
             <Select
               tintColorCorrect={
                 !enableTouch &&
                 data.incorrect_answers[1] === data.correct_answer
               }
+              changeOpacity={activeOPacity}
             />
           </Pressable>
           <Option>{data.incorrect_answers[1]}</Option>
@@ -149,12 +158,14 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
             disabled={enableTouch && phraseSelect === data.id ? true : false}
             {...props}
             onPress={() => handleReport(data.id, data.incorrect_answers[2], 3)}
+            hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
           >
             <Select
               tintColorCorrect={
                 !enableTouch &&
                 data.incorrect_answers[2] === data.correct_answer
               }
+              changeOpacity={activeOPacity}
             />
           </Pressable>
           <Option>{data.incorrect_answers[2]}</Option>
@@ -171,12 +182,14 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
             disabled={enableTouch && phraseSelect === data.id ? true : false}
             {...props}
             onPress={() => handleReport(data.id, data.incorrect_answers[3], 4)}
+            hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
           >
             <Select
               tintColorCorrect={
                 !enableTouch &&
                 data.incorrect_answers[3] === data.correct_answer
               }
+              changeOpacity={activeOPacity}
             />
           </Pressable>
           <Option>{data.incorrect_answers[3]}</Option>

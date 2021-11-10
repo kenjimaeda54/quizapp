@@ -8,6 +8,7 @@ interface ContainerProps {
 
 interface SelectProps {
   tintColorCorrect: boolean;
+  changeOpacity: boolean;
 }
 
 export const Container = styled.View<ContainerProps>`
@@ -50,6 +51,7 @@ export const Select = styled.View<SelectProps>`
   background: ${({ tintColorCorrect, theme }) =>
     tintColorCorrect ? theme.colors.success : 'transparent'};
   width: 20px;
+  opacity: ${({ changeOpacity }) => (changeOpacity ? 0.5 : 1)};
   height: 20px;
   border-color: ${({ theme }) => theme.colors.success};
   border-radius: 4px;
