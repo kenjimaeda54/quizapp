@@ -22,7 +22,7 @@ import {
 type RoutesScreens = StackNavigationProp<RootStackParamList, 'home'>;
 
 export function Home() {
-  const { setQuantityHook } = useCustomHook();
+  const { setQuantityHook, fetchStorage } = useCustomHook();
   const { navigate } = useNavigation<RoutesScreens>();
   const [quantity, setQuantity] = useState(0);
   const { colors } = useTheme();
@@ -40,6 +40,7 @@ export function Home() {
     navigate('phrases');
     setQuantityHook(quantity);
   }
+  console.log(fetchStorage());
 
   return (
     <Container>

@@ -2,9 +2,10 @@ import React, { useState, useRef } from 'react';
 import { Pressable, PressableProps, TouchableOpacityProps } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
 import {
   keyStorageReport,
-  KeyTotalAnswers,
+  KeyTotalCorrect,
   KeyTotalReport,
   KeyTotalWrong,
   Phrase,
@@ -20,11 +21,6 @@ import {
 } from './styles';
 import { useTheme } from 'styled-components';
 import { View } from 'react-native';
-import {
-  BorderlessButton,
-  BorderlessButtonProps,
-  RectButton,
-} from 'react-native-gesture-handler';
 
 interface ListPhases extends PressableProps {
   data: Phrase;
@@ -55,7 +51,9 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
 
   async function handleAsyncStorage(report) {
     try {
+      //seta o relatorio
       const phrases = {
+        id: uuid.v4(),
         index: index,
         answerCorrect: data.correct_answer,
         answerSelect: report,
@@ -66,19 +64,34 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
       const storage = fetchStorageTotalReport
         ? JSON.parse(fetchStorageTotalReport)
         : [];
-      AsyncStorage.setItem(KeyTotalReport, JSON.stringify(total));
-      AsyncStorage.setItem(
-        KeyTotalWrong,
-        JSON.stringify(totalWrongRef.current),
-      );
-      AsyncStorage.setItem(
-        KeyTotalAnswers,
-        JSON.stringify(totalAnswersRef.current),
-      );
       AsyncStorage.setItem(
         keyStorageReport,
         JSON.stringify([...storage, phrases]),
       );
+
+      //todas respostas erradas
+      const fetchStorageTotalWrong = await AsyncStorage.getItem(KeyTotalWrong);
+      const storageWrong = fetchStorageTotalWrong
+        ? JSON.parse(fetchStorageTotalWrong)
+        : 0;
+      const totalWrong = storageWrong + totalWrongRef.current;
+      AsyncStorage.setItem(KeyTotalWrong, JSON.stringify(totalWrong));
+
+      //todas as perguntas respondidas
+      const totalReport = await AsyncStorage.getItem(KeyTotalReport);
+      const all = totalReport ? JSON.parse(totalReport) : 0;
+      const allReport = all + total;
+      AsyncStorage.setItem(KeyTotalReport, JSON.stringify(allReport));
+
+      //todas respostas corretas
+      const fetchStorageTotalCorrect = await AsyncStorage.getItem(
+        KeyTotalCorrect,
+      );
+      const answersCorrect = fetchStorageTotalCorrect
+        ? JSON.parse(fetchStorageTotalCorrect)
+        : 0;
+      const totalCorrect = answersCorrect + totalAnswersRef.current;
+      AsyncStorage.setItem(KeyTotalCorrect, JSON.stringify(totalCorrect));
     } catch (erro) {
       console.log(erro);
     }

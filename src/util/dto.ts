@@ -6,6 +6,7 @@ export interface Phrase {
 }
 
 export interface UserAnswer {
+  id: string;
   index: number;
   answerCorrect: string;
   answerSelect: string;
@@ -13,7 +14,7 @@ export interface UserAnswer {
 
 export const keyStorageReport = '@KeyQuizApp';
 
-export const KeyTotalAnswers = '@KeyTotalAnswers';
+export const KeyTotalCorrect = '@KeyTotalCorrect';
 
 export const KeyTotalWrong = '@keyTotalWrong';
 

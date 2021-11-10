@@ -1,7 +1,7 @@
 import React, { createContext, useContext, ReactNode, useState } from 'react';
 import {
   keyStorageReport,
-  KeyTotalAnswers,
+  KeyTotalCorrect,
   KeyTotalReport,
   KeyTotalWrong,
   UserAnswer,
@@ -40,12 +40,13 @@ function HooksProvider({ children }: HooksProviderProps) {
     try {
       const fetchUserReport = await AsyncStorage.getItem(keyStorageReport);
       const dataReport: UserAnswer[] = JSON.parse(fetchUserReport);
-      const fetchTotalAnswers = await AsyncStorage.getItem(KeyTotalAnswers);
-      const totalCorrect: number = JSON.parse(fetchTotalAnswers);
+      const fetchTotalCorrect = await AsyncStorage.getItem(KeyTotalCorrect);
+      const totalCorrect: number = JSON.parse(fetchTotalCorrect);
       const fetchTotalWrong = await AsyncStorage.getItem(KeyTotalWrong);
       const totalWrong: number = JSON.parse(fetchTotalWrong);
       const fetchTotalQuestion = await AsyncStorage.getItem(KeyTotalReport);
       const totalQuestion: number = JSON.parse(fetchTotalQuestion);
+      console.log(dataReport, totalCorrect, totalWrong, totalQuestion);
       return {
         dataReport,
         totalCorrect,
