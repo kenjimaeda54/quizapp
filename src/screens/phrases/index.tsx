@@ -111,7 +111,7 @@ export function Phrases() {
     }
   }
 
-  async function fetchStorageRepor() {
+  async function handlePressPhrase() {
     try {
       const totalCorrectReport = await fetchStorage();
       const totalIncorrectReport = await fetchStorage();
@@ -120,10 +120,6 @@ export function Phrases() {
       console.log(error);
     }
   }
-
-  useEffect(() => {
-    fetchStorageRepor();
-  }, []);
 
   const handleOpacity = () => setIsTouch(true);
   function handleBack() {
@@ -169,7 +165,12 @@ export function Phrases() {
           </Fragment>
         }
         renderItem={({ item, index }) => (
-          <ListPhases total={allPhrase.length} index={index + 1} data={item} />
+          <ListPhases
+            onPressIn={handlePressPhrase}
+            total={allPhrase.length}
+            index={index + 1}
+            data={item}
+          />
         )}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{

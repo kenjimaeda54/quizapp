@@ -60,8 +60,12 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
         answerCorrect: data.correct_answer,
         answerSelect: report,
       };
-      const fetchStorage = await AsyncStorage.getItem(keyStorageReport);
-      const storage = fetchStorage ? JSON.parse(fetchStorage) : [];
+      const fetchStorageTotalReport = await AsyncStorage.getItem(
+        keyStorageReport,
+      );
+      const storage = fetchStorageTotalReport
+        ? JSON.parse(fetchStorageTotalReport)
+        : [];
       AsyncStorage.setItem(KeyTotalReport, JSON.stringify(total));
       AsyncStorage.setItem(
         KeyTotalWrong,

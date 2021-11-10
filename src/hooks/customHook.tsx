@@ -46,7 +46,6 @@ function HooksProvider({ children }: HooksProviderProps) {
       const totalWrong: number = JSON.parse(fetchTotalWrong);
       const fetchTotalQuestion = await AsyncStorage.getItem(KeyTotalReport);
       const totalQuestion: number = JSON.parse(fetchTotalQuestion);
-      console.log(dataReport, totalCorrect, totalWrong, totalQuestion);
       return {
         dataReport,
         totalCorrect,
