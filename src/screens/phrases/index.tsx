@@ -2,7 +2,13 @@ import React, { useState, Fragment, useRef, useEffect } from 'react';
 import uuid from 'react-native-uuid';
 import Modal from '../../components/modal_report';
 import { Button } from '../../components/button_submit';
-import { Pressable, ActivityIndicator, StatusBar, View } from 'react-native';
+import {
+  Pressable,
+  ActivityIndicator,
+  StatusBar,
+  View,
+  FlatList,
+} from 'react-native';
 import { ListPhases } from '../../components/list_phrases';
 import { Modalize } from 'react-native-modalize';
 import { AntDesign } from '@expo/vector-icons';
@@ -11,7 +17,7 @@ import { useTheme } from 'styled-components';
 import { useNavigation } from '@react-navigation/native';
 import { api } from '../../services';
 import { Separator } from '../../components/separation/styles';
-import { Phrase, UserAnswer } from '../../util/dto';
+import { Phrase, TotalAnswer, UserAnswer } from '../../util/dto';
 import {
   Container,
   ListContainer,
@@ -40,6 +46,11 @@ export function Phrases() {
   const [isTouch, setIsTouch] = useState(false);
   const [allPhrase, setAllPhrase] = useState<Phrase[]>([]);
   const [loading, setLoading] = useState(false);
+  const [touchPhrases, setPhrases] = useState(false);
+  const [reportUser, setReportUser] = useState<UserAnswer[]>([]);
+  const [totalAnswers, setTOtalAnswers] = useState<TotalAnswer>(
+    {} as TotalAnswer,
+  );
 
   async function handleConfirm() {
     try {
@@ -111,14 +122,8 @@ export function Phrases() {
     }
   }
 
-  async function handlePressPhrase() {
-    try {
-      const totalCorrectReport = await fetchStorage();
-      const totalIncorrectReport = await fetchStorage();
-      const fetchDataReport = await fetchStorage();
-    } catch (error) {
-      console.log(error);
-    }
+  function handlePressPhrase() {
+    setPhrases(true);
   }
 
   const handleOpacity = () => setIsTouch(true);
@@ -126,94 +131,107 @@ export function Phrases() {
     goBack();
   }
 
-  const handleReport = () => openModalRef.current?.open();
+  async function handleReport() {
+    try {
+      const totalReportUser = await fetchStorage();
+      setReportUser(totalReportUser.dataReport);
+      const questions = await fetchStorage();
+      setTOtalAnswers(questions.totalQuestions);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      openModalRef.current?.open();
+    }
+  }
 
   return (
     <Fragment>
-      <ListContainer
-        data={allPhrase}
-        keyExtractor={(item) => String(item.id)}
-        ListHeaderComponent={
-          <Fragment>
-            <StatusBar />
-            <Container>
-              <Pressable
-                onPress={handleBack}
-                onPressIn={handleOpacity}
-                style={{
-                  opacity: isTouch ? 0.5 : 1,
-                  marginBottom: 50,
-                }}
-                hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-              >
-                <AntDesign name="left" size={15} color={colors.main} />
-              </Pressable>
-              <View>
-                <Title>Perguntas e respostas</Title>
-                <Subtitle>
-                  Confirme no start a quantidade de perguntas ou retorne no
-                  cancel
-                </Subtitle>
-              </View>
-              <View>
-                <TitleSection>
-                  Quantidade de perguntas escolhidas:{' '}
-                  <ColorQuantity> {quantity}</ColorQuantity>
-                </TitleSection>
-              </View>
-            </Container>
-          </Fragment>
-        }
-        renderItem={({ item, index }) => (
-          <ListPhases
-            onPressIn={handlePressPhrase}
-            total={allPhrase.length}
-            index={index + 1}
-            data={item}
-          />
-        )}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponentStyle={{
-          marginBottom: 20,
-        }}
-        contentContainerStyle={{
-          paddingBottom: 50,
-        }}
-        ItemSeparatorComponent={() => (
-          <Separator
-            style={{
-              marginVertical: 20,
-            }}
-          />
-        )}
-      />
-      <ContainerButton>
-        {loading ? (
-          <ContainerLoading>
-            <ActivityIndicator size="large" color={colors.main} />
-          </ContainerLoading>
-        ) : (
-          <Fragment>
-            {isCorrect ? (
-              <Button
-                onPress={handleReport}
-                haveQuantity={true}
-                title="relatorio"
-              />
-            ) : (
-              <Fragment>
-                <ButtonConfirm onPress={handleConfirm} activeOpacity={0.5}>
-                  <TextButtonConfirm>Start</TextButtonConfirm>
-                </ButtonConfirm>
-                <ButtonCancel activeOpacity={0.5}>
-                  <TextButtonCancel>Cancel</TextButtonCancel>
-                </ButtonCancel>
-              </Fragment>
-            )}
-          </Fragment>
-        )}
-      </ContainerButton>
-      {/* <Modal ref={openModalRef} data={} /> */}
+      <Fragment>
+        <ListContainer
+          data={allPhrase}
+          keyExtractor={(item) => String(item.id)}
+          ListHeaderComponent={
+            <Fragment>
+              <StatusBar />
+              <Container>
+                <Pressable
+                  onPress={handleBack}
+                  onPressIn={handleOpacity}
+                  style={{
+                    opacity: isTouch ? 0.5 : 1,
+                    marginBottom: 50,
+                  }}
+                  hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                >
+                  <AntDesign name="left" size={15} color={colors.main} />
+                </Pressable>
+                <View>
+                  <Title>Perguntas e respostas</Title>
+                  <Subtitle>
+                    Confirme no start a quantidade de perguntas ou retorne no
+                    cancel
+                  </Subtitle>
+                </View>
+                <View>
+                  <TitleSection>
+                    Quantidade de perguntas escolhidas:{' '}
+                    <ColorQuantity> {quantity}</ColorQuantity>
+                  </TitleSection>
+                </View>
+              </Container>
+            </Fragment>
+          }
+          renderItem={({ item, index }) => (
+            <ListPhases
+              onPressIn={handlePressPhrase}
+              total={allPhrase.length}
+              index={index + 1}
+              data={item}
+            />
+          )}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponentStyle={{
+            marginBottom: 20,
+          }}
+          contentContainerStyle={{
+            paddingBottom: 50,
+          }}
+          ItemSeparatorComponent={() => (
+            <Separator
+              style={{
+                marginVertical: 20,
+              }}
+            />
+          )}
+        />
+        <ContainerButton>
+          {loading ? (
+            <ContainerLoading>
+              <ActivityIndicator size="large" color={colors.main} />
+            </ContainerLoading>
+          ) : (
+            <Fragment>
+              {isCorrect ? (
+                <Button
+                  onPress={handleReport}
+                  haveQuantity={touchPhrases}
+                  title="relatorio"
+                />
+              ) : (
+                <Fragment>
+                  <ButtonConfirm onPress={handleConfirm} activeOpacity={0.5}>
+                    <TextButtonConfirm>Start</TextButtonConfirm>
+                  </ButtonConfirm>
+                  <ButtonCancel activeOpacity={0.5}>
+                    <TextButtonCancel>Cancel</TextButtonCancel>
+                  </ButtonCancel>
+                </Fragment>
+              )}
+            </Fragment>
+          )}
+        </ContainerButton>
+      </Fragment>
+      <Modal ref={openModalRef} data={reportUser} total={totalAnswers} />
     </Fragment>
   );
 }

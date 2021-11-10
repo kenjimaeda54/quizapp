@@ -1,9 +1,8 @@
 import React, { createContext, useContext, ReactNode, useState } from 'react';
 import {
   keyStorageReport,
-  KeyTotalCorrect,
-  KeyTotalReport,
-  KeyTotalWrong,
+  KeyTotalAnswers,
+  TotalAnswer,
   UserAnswer,
 } from '../util/dto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,9 +15,7 @@ interface HooksProps {
 
 interface StorageProps {
   dataReport: UserAnswer[];
-  totalCorrect: number;
-  totalWrong: number;
-  totalQuestion: number;
+  totalQuestions: TotalAnswer;
 }
 
 const HooksContext = createContext<HooksProps>({} as HooksProps);
@@ -40,18 +37,12 @@ function HooksProvider({ children }: HooksProviderProps) {
     try {
       const fetchUserReport = await AsyncStorage.getItem(keyStorageReport);
       const dataReport: UserAnswer[] = JSON.parse(fetchUserReport);
-      const fetchTotalCorrect = await AsyncStorage.getItem(KeyTotalCorrect);
-      const totalCorrect: number = JSON.parse(fetchTotalCorrect);
-      const fetchTotalWrong = await AsyncStorage.getItem(KeyTotalWrong);
-      const totalWrong: number = JSON.parse(fetchTotalWrong);
-      const fetchTotalQuestion = await AsyncStorage.getItem(KeyTotalReport);
-      const totalQuestion: number = JSON.parse(fetchTotalQuestion);
-      console.log(dataReport, totalCorrect, totalWrong, totalQuestion);
+      const questions = await AsyncStorage.getItem(KeyTotalAnswers);
+      const totalQuestions: TotalAnswer = JSON.parse(questions);
+
       return {
         dataReport,
-        totalCorrect,
-        totalWrong,
-        totalQuestion,
+        totalQuestions,
       };
     } catch (error) {
       console.log(error);

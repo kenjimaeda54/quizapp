@@ -3,13 +3,7 @@ import { Pressable, PressableProps, TouchableOpacityProps } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
-import {
-  keyStorageReport,
-  KeyTotalCorrect,
-  KeyTotalReport,
-  KeyTotalWrong,
-  Phrase,
-} from '../../util/dto';
+import { keyStorageReport, KeyTotalAnswers, Phrase } from '../../util/dto';
 import {
   Container,
   ContainerHeader,
@@ -51,13 +45,14 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
 
   async function handleAsyncStorage(report) {
     try {
-      //seta o relatorio
+      //setando as frases escolhidas
       const phrases = {
         id: uuid.v4(),
         index: index,
         answerCorrect: data.correct_answer,
         answerSelect: report,
       };
+
       const fetchStorageTotalReport = await AsyncStorage.getItem(
         keyStorageReport,
       );
@@ -68,30 +63,29 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
         keyStorageReport,
         JSON.stringify([...storage, phrases]),
       );
-
-      //todas respostas erradas
-      const fetchStorageTotalWrong = await AsyncStorage.getItem(KeyTotalWrong);
-      const storageWrong = fetchStorageTotalWrong
-        ? JSON.parse(fetchStorageTotalWrong)
-        : 0;
-      const totalWrong = storageWrong + totalWrongRef.current;
-      AsyncStorage.setItem(KeyTotalWrong, JSON.stringify(totalWrong));
-
-      //todas as perguntas respondidas
-      const totalReport = await AsyncStorage.getItem(KeyTotalReport);
-      const all = totalReport ? JSON.parse(totalReport) : 0;
-      const allReport = all + total;
-      AsyncStorage.setItem(KeyTotalReport, JSON.stringify(allReport));
-
-      //todas respostas corretas
-      const fetchStorageTotalCorrect = await AsyncStorage.getItem(
-        KeyTotalCorrect,
-      );
-      const answersCorrect = fetchStorageTotalCorrect
-        ? JSON.parse(fetchStorageTotalCorrect)
-        : 0;
-      const totalCorrect = answersCorrect + totalAnswersRef.current;
-      AsyncStorage.setItem(KeyTotalCorrect, JSON.stringify(totalCorrect));
+      //setando o total de acertos e erros
+      const newAnswers = {
+        id: uuid.v4(),
+        answerTotalCorrect: totalAnswersRef.current,
+        answerTotalWrong: totalWrongRef.current,
+        totalQuestions: total,
+      };
+      const fetchAllAnswers = await AsyncStorage.getItem(KeyTotalAnswers);
+      const allAnswers = fetchAllAnswers ? JSON.parse(fetchAllAnswers) : [];
+      if (allAnswers.length > 0) {
+        const newTotalAnswers = allAnswers.map((item) => {
+          return {
+            id: item.id,
+            answerTotalCorrect:
+              item.answerTotalCorrect + totalAnswersRef.current,
+            answerTotalWrong: item.answerTotalWrong + totalWrongRef.current,
+            totalQuestions: item.totalQuestions + total,
+          };
+        });
+        AsyncStorage.setItem(KeyTotalAnswers, JSON.stringify(newTotalAnswers));
+      } else {
+        AsyncStorage.setItem(KeyTotalAnswers, JSON.stringify(newAnswers));
+      }
     } catch (erro) {
       console.log(erro);
     }

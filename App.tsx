@@ -10,6 +10,8 @@ import {
   useFonts,
 } from '@expo-google-fonts/archivo';
 import theme from './src/components/global/theme';
+// import { keyStorageReport, KeyTotalAnswers } from './src/util/dto';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App(): JSX.Element {
   const [isLoading] = useFonts({
@@ -21,6 +23,8 @@ export default function App(): JSX.Element {
   if (!isLoading) {
     return <AppLoading />;
   }
+  // AsyncStorage.removeItem(keyStorageReport);
+  // AsyncStorage.removeItem(KeyTotalAnswers);
 
   return (
     <ThemeProvider theme={theme}>

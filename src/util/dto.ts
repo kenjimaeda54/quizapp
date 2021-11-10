@@ -12,10 +12,13 @@ export interface UserAnswer {
   answerSelect: string;
 }
 
+export interface TotalAnswer {
+  id: string;
+  answerTotalCorrect: number;
+  answerTotalWrong: number;
+  totalQuestions: number;
+}
+
 export const keyStorageReport = '@KeyQuizApp';
 
-export const KeyTotalCorrect = '@KeyTotalCorrect';
-
-export const KeyTotalWrong = '@keyTotalWrong';
-
-export const KeyTotalReport = '@KeyTotalQuestion';
+export const KeyTotalAnswers = '@KeyTotalAnswers';
