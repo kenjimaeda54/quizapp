@@ -7,11 +7,7 @@ interface ButtonSubmitProps extends BorderlessButtonProps {
   title: string;
 }
 
-export default function Button({
-  title,
-  haveQuantity,
-  ...props
-}: ButtonSubmitProps) {
+export function Button({ title, haveQuantity, ...props }: ButtonSubmitProps) {
   return (
     <ButtonSubmit {...props} enabled={haveQuantity} haveQuantity={haveQuantity}>
       <TextSubmit> {title} </TextSubmit>

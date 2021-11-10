@@ -58,3 +58,13 @@ export const SubtitleAnswers = styled(TitleAnswers)`
 export const SelectAnswer = styled(TitleAnswers)``;
 
 export const SubTitleAnswer = styled(SubtitleAnswers)``;
+
+export const Footer = styled.View``;
+
+export const FooterTotal = styled.View``;
+
+export const TitleFooter = styled.Text``;
+
+export const ColorFooter = styled.Text``;
+
+export const SubtitleFooter = styled.Text``;

@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import { View } from 'react-native';
 import { Modalize, ModalizeProps } from 'react-native-modalize';
+import { UserAnswer } from '../../util/dto';
 import { Separation } from '../separation';
 import {
   Content,
@@ -13,16 +14,22 @@ import {
   SubtitleAnswers,
   SelectAnswer,
   SubTitleAnswer,
+  Footer,
+  FooterTotal,
+  TitleFooter,
+  ColorFooter,
+  SubtitleFooter,
 } from './styles';
 
 interface ModalReporProps extends ModalizeProps {
-  index: number;
-  answerCorrect: string;
-  answerSelect: string;
+  data: UserAnswer;
+  totalAnswers: number;
+  totalWrong: number;
+  totalQuestion: number;
 }
 
 const ModalReport: React.ForwardRefRenderFunction<Modalize, ModalReporProps> = (
-  { index, answerCorrect, answerSelect, ...rest },
+  { totalAnswers, totalWrong, totalQuestion, data, ...rest },
   ref,
 ) => {
   return (
@@ -38,18 +45,37 @@ const ModalReport: React.ForwardRefRenderFunction<Modalize, ModalReporProps> = (
       }}
       {...rest}
       ref={ref}
+      scrollViewProps={{
+        showsVerticalScrollIndicator: false,
+      }}
+      FooterComponent={
+        <Footer>
+          <FooterTotal>
+            <TitleFooter>Total de perguntas:</TitleFooter>
+            <ColorFooter> {totalQuestion} </ColorFooter>
+          </FooterTotal>
+          <FooterTotal>
+            <SubtitleFooter>Total de acertos:</SubtitleFooter>
+            <ColorFooter>{totalAnswers} </ColorFooter>
+          </FooterTotal>
+          <FooterTotal>
+            <SubtitleFooter>Total de erros:</SubtitleFooter>
+            <ColorFooter>{totalWrong}</ColorFooter>
+          </FooterTotal>
+        </Footer>
+      }
     >
       <Content>
         <TitleModal> Seu relatório de acerto e erros </TitleModal>
         <View>
-          <Question>Questão: {index}</Question>
+          <Question>Questão: {data.index}</Question>
           <WrapperAnswers>
             <TitleAnswers>Reposta escolhida:</TitleAnswers>
-            <SubtitleAnswers>{answerCorrect}</SubtitleAnswers>
+            <SubtitleAnswers>{data.answerSelect}</SubtitleAnswers>
           </WrapperAnswers>
           <WrapperAnswers>
             <SelectAnswer>Resposta correta:</SelectAnswer>
-            <SubTitleAnswer>{answerSelect}</SubTitleAnswer>
+            <SubTitleAnswer>{data.answerCorrect}</SubTitleAnswer>
           </WrapperAnswers>
         </View>
         <Separation />

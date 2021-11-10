@@ -1,9 +1,17 @@
 import React, { useState, Fragment, useRef, useEffect } from 'react';
 import uuid from 'react-native-uuid';
+import Modal from '../../components/modal_report';
+import { Button } from '../../components/button_submit';
 import { Pressable, ActivityIndicator, StatusBar, View } from 'react-native';
 import { ListPhases } from '../../components/list_phrases';
 import { Modalize } from 'react-native-modalize';
 import { AntDesign } from '@expo/vector-icons';
+import { useCustomHook } from '../../hooks/customHook';
+import { useTheme } from 'styled-components';
+import { useNavigation } from '@react-navigation/native';
+import { api } from '../../services';
+import { Separator } from '../../components/separation/styles';
+import { Phrase, UserAnswer } from '../../util/dto';
 import {
   Container,
   ListContainer,
@@ -18,13 +26,6 @@ import {
   TextButtonCancel,
   ContainerLoading,
 } from './styles';
-import { Phrase } from '../../util/dto';
-import Button from '../../components/button_submit';
-import { useCustomHook } from '../../hooks/customHook';
-import { useTheme } from 'styled-components';
-import { useNavigation } from '@react-navigation/native';
-import { api } from '../../services';
-import { Separator } from '../../components/separation/styles';
 
 interface DataProps {
   results: Phrase[];
@@ -32,7 +33,7 @@ interface DataProps {
 }
 export function Phrases() {
   const { goBack } = useNavigation();
-  const { quantity } = useCustomHook();
+  const { quantity, fetchStorage } = useCustomHook();
   const { colors } = useTheme();
   const openModalRef = useRef<Modalize>(null);
   const [isCorrect, setIsCorrect] = useState(false);
@@ -110,8 +111,21 @@ export function Phrases() {
     }
   }
 
-  const handleOpacity = () => setIsTouch(true);
+  async function fetchStorageRepor() {
+    try {
+      const totalCorrectReport = await fetchStorage();
+      const totalIncorrectReport = await fetchStorage();
+      const fetchDataReport = await fetchStorage();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+  useEffect(() => {
+    fetchStorageRepor();
+  }, []);
+
+  const handleOpacity = () => setIsTouch(true);
   function handleBack() {
     goBack();
   }
@@ -155,7 +169,7 @@ export function Phrases() {
           </Fragment>
         }
         renderItem={({ item, index }) => (
-          <ListPhases index={index + 1} data={item} />
+          <ListPhases total={allPhrase.length} index={index + 1} data={item} />
         )}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{
@@ -182,7 +196,7 @@ export function Phrases() {
             {isCorrect ? (
               <Button
                 onPress={handleReport}
-                haveQuantity={allPhrase.length > 0}
+                haveQuantity={true}
                 title="relatorio"
               />
             ) : (
@@ -198,7 +212,7 @@ export function Phrases() {
           </Fragment>
         )}
       </ContainerButton>
-      {/* <Modal ref={openModalRef} /> */}
+      {/* <Modal ref={openModalRef} data={} /> */}
     </Fragment>
   );
 }

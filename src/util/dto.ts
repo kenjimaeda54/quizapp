@@ -5,15 +5,16 @@ export interface Phrase {
   incorrect_answers: string[];
 }
 
-export const results = [
-  {
-    id: 1,
-    category: 'Entertainment: Television',
-    type: 'multiple',
-    difficulty: 'medium',
-    question:
-      'What year did the television company BBC officially launch the channel BBC One?',
-    correct_answer: '1936',
-    incorrect_answers: ['1948', '1932', '1955'],
-  },
-];
+export interface UserAnswer {
+  index: number;
+  answerCorrect: string;
+  answerSelect: string;
+}
+
+export const keyStorageReport = '@KeyQuizApp';
+
+export const KeyTotalAnswers = '@KeyTotalAnswers';
+
+export const KeyTotalWrong = '@keyTotalWrong';
+
+export const KeyTotalReport = '@KeyTotalQuestion';

@@ -6,6 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from 'styled-components';
 import { View } from 'react-native';
 import { useCustomHook } from '../../hooks/customHook';
+import { Button } from '../../components/button_submit';
 import {
   Container,
   Title,
@@ -17,7 +18,6 @@ import {
   ContainerMins,
   ContainerPlus,
 } from './styles';
-import Button from '../../components/button_submit';
 
 type RoutesScreens = StackNavigationProp<RootStackParamList, 'home'>;
 
