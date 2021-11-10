@@ -6,10 +6,10 @@ Criar uma aplicação consumindo [api](https://opentdb.com/) para gerar pergunta
 
 
 ## Feature
-- Retorno da API não possui  id nos objetos, então utilizei o [react-native-uuid](https://github.com/eugenehp/react-native-uuid#readme) para gerar aleatoriamente e inseri.
-- Id e importante para react identificar os componentes filhos e também para futuras consultas nas listas
-- Resposta correta não vem junto das  respostas incorretas, então criei uma lista e implementei array de perguntas com as incorretas e a correta.
--  Se o index for o primeiro  a pergunta correta sera inserida na posição  dois, se for par na terceira  e se for impar na última, gerando sensação de aleatoriedade
+- Retorno da API não possui  id nos objetos, então utilizei o [react-native-uuid](https://github.com/eugenehp/react-native-uuid#readme) para gerar aleatoriamente é inserir.
+- Id e importante para react identificar os componentes filhos é também para futuras consultas nas listas
+- Resposta correta não vem junto das  respostas incorretas, então criei uma lista e implementei array de perguntas com as incorretas é a correta.
+-  Se o index for o primeiro  a pergunta correta sera inserida na posição  dois, se for par na terceira  é se for impar na última, gerando sensação de aleatoriedade
 
 ``` typescript
 async function handleConfirm() {
@@ -97,9 +97,9 @@ async function handleConfirm() {
   }, []);
   
 ```
-- Utilizei recurso interesante da flatlist, no react native, scroll view e flatlist nao podem ficar na mesma direcao.
+- Utilizei recurso interesante da flatlist, no react native, scroll view e flatlist não podem ficar na mesma direção.
 - Para fazer scroll na tela toda,utilizei recurso da flat list ListHeaderComponent,assim consigo um header no topo do app 
-- Instanciei um novo objeto da flatlist para type script pegar as tipagens
+- Instanciei um novo objeto da flatlist. Assim type script pegar as tipagens
 
 ``` javascript
 //---------- arquivos de estilos ----------
