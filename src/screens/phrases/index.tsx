@@ -48,7 +48,7 @@ export function Phrases() {
   const [loading, setLoading] = useState(false);
   const [touchPhrases, setPhrases] = useState(false);
   const [reportUser, setReportUser] = useState<UserAnswer[]>([]);
-  const [totalAnswers, setTOtalAnswers] = useState<TotalAnswer>(
+  const [totalAnswers, setTotalAnswers] = useState<TotalAnswer>(
     {} as TotalAnswer,
   );
 
@@ -136,13 +136,20 @@ export function Phrases() {
       const totalReportUser = await fetchStorage();
       setReportUser(totalReportUser.dataReport);
       const questions = await fetchStorage();
-      setTOtalAnswers(questions.totalQuestions);
+      setTotalAnswers(questions.totalQuestions);
     } catch (error) {
       console.log(error);
     } finally {
       openModalRef.current?.open();
     }
   }
+
+  useEffect(() => {
+    return () => {
+      setTotalAnswers({} as TotalAnswer);
+      setReportUser([] as UserAnswer[]);
+    };
+  }, []);
 
   return (
     <Fragment>
@@ -184,7 +191,6 @@ export function Phrases() {
           renderItem={({ item, index }) => (
             <ListPhases
               onPressIn={handlePressPhrase}
-              total={allPhrase.length}
               index={index + 1}
               data={item}
             />

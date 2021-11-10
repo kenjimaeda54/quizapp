@@ -50,16 +50,16 @@ const ModalReport: React.ForwardRefRenderFunction<Modalize, ModalReporProps> = (
           <Flap />
           <Footer>
             <FooterTotal>
-              <TitleFooter>Total de perguntas:</TitleFooter>
-              <ColorFooter> {total.totalQuestions} </ColorFooter>
+              <TitleFooter>Total de perguntas respondidas:</TitleFooter>
+              <ColorFooter> {total?.totalQuestions} </ColorFooter>
             </FooterTotal>
             <FooterTotal>
               <TitleFooter>Total de acertos:</TitleFooter>
-              <ColorFooter>{total.answerTotalCorrect} </ColorFooter>
+              <ColorFooter>{total?.answerTotalCorrect} </ColorFooter>
             </FooterTotal>
             <FooterTotal>
               <TitleFooter>Total de erros:</TitleFooter>
-              <ColorFooter>{total.answerTotalWrong}</ColorFooter>
+              <ColorFooter>{total?.answerTotalWrong}</ColorFooter>
             </FooterTotal>
           </Footer>
         </ContainerFlap>
@@ -87,7 +87,7 @@ const ModalReport: React.ForwardRefRenderFunction<Modalize, ModalReporProps> = (
           </Fragment>
         )}
       </ContentTitleModal>
-      {data.map((item) => (
+      {data?.map((item) => (
         <Content key={item.id}>
           <View>
             <WrapperAnswers>

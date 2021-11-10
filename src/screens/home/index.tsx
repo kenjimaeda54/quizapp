@@ -1,7 +1,13 @@
-import React, { useEffect, useState, useRef, Fragment } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  Fragment,
+  useCallback,
+} from 'react';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import { RectButton } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../routes/app.routes';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from 'styled-components';
@@ -71,9 +77,11 @@ export function Home() {
     }
   }
 
-  useEffect(() => {
-    fetchStorageReport();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchStorageReport();
+    }, []),
+  );
 
   const handleModal = () => openModalRef.current?.open();
 
@@ -85,7 +93,7 @@ export function Home() {
           Selecione a quantidade de perguntas deseja responder.
         </Subtitle>
       </View>
-      {allReport.length > 0 && (
+      {allReport?.length > 0 && (
         <Fragment>
           <RectButton onPress={handleModal}>
             <ContainerReport>

@@ -43,6 +43,7 @@ export const ContainerSelect = styled.View`
   flex-direction: row;
   align-items: center;
   width: 80%;
+  margin: 5px 0px;
 `;
 
 export const SectionAnswers = styled.View``;

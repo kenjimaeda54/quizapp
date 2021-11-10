@@ -1,9 +1,10 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Phrases } from '../screens/phrases';
 import { Home } from '../screens/home';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 
-const { Navigator, Screen } = createNativeStackNavigator();
+const { Navigator, Screen } = createStackNavigator();
 
 export type RootStackParamList = {
   home: undefined;
@@ -15,6 +16,9 @@ export function AppRoutes() {
     <Navigator
       screenOptions={{
         headerShown: false,
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
       }}
     >
       <Screen name="home" component={Home} />

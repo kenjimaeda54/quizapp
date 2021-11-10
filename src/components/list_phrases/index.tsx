@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Pressable, PressableProps, TouchableOpacityProps } from 'react-native';
+import { Pressable, PressableProps } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
@@ -19,13 +19,13 @@ import { View } from 'react-native';
 interface ListPhases extends PressableProps {
   data: Phrase;
   index: number;
-  total: number;
 }
 
-export function ListPhases({ total, index, data, ...props }: ListPhases) {
+export function ListPhases({ index, data, ...props }: ListPhases) {
   const { colors } = useTheme();
   let totalAnswersRef = useRef(0);
   let totalWrongRef = useRef(0);
+  let totalAnswers = useRef(0);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isTouched, setIsTouched] = useState(0);
   const [phraseSelect, setPhraseSelect] = useState('');
@@ -38,9 +38,11 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
     setEnableTouch(false);
     setActiveOpacity(true);
     if (report === data.correct_answer) {
+      totalAnswers.current += 1;
       totalAnswersRef.current += 1;
       return setIsCorrect(true);
     }
+    totalAnswers.current += 1;
     totalWrongRef.current += 1;
     return setIsCorrect(false);
   }
@@ -71,18 +73,17 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
         id: uuid.v4(),
         answerTotalCorrect: totalAnswersRef.current,
         answerTotalWrong: totalWrongRef.current,
-        totalQuestions: total,
+        totalQuestions: totalAnswers.current,
       };
       const fetchAllAnswers = await AsyncStorage.getItem(KeyTotalAnswers);
       const allAnswers = fetchAllAnswers ? JSON.parse(fetchAllAnswers) : {};
-      console.log(allAnswers);
       if (Object.keys(allAnswers).length > 0) {
         const updateTotalAnswers = {
           id: allAnswers.id,
           answerTotalCorrect:
             allAnswers.answerTotalCorrect + totalAnswersRef.current,
           answerTotalWrong: allAnswers.answerTotalWrong + totalWrongRef.current,
-          totalQuestions: allAnswers.totalQuestions + total,
+          totalQuestions: allAnswers.totalQuestions + totalAnswers.current,
         };
         AsyncStorage.setItem(
           KeyTotalAnswers,
@@ -96,7 +97,6 @@ export function ListPhases({ total, index, data, ...props }: ListPhases) {
     }
   }
 
-  console.log(data.correct_answer);
   return (
     <Container fieldSelect={phraseSelect === data.id}>
       <ContainerHeader>
